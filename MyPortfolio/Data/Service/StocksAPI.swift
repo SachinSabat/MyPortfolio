@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkManager
 
 //URL list
 fileprivate enum StocksAPIConstants {

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import NetworkManager
 
 /// A repository class responsible for handling data related to the stocks list.
 ///
@@ -20,7 +22,7 @@ final class StocksListRepository {
 
     /// The network service responsible for data fetching.
     private let networkClient: NetworkClientServiceProtocol
-
+    var cancellable = Set<AnyCancellable>()
     /// Initializes a new `StocksListRepository` instance.
     ///
     /// - Parameter network: The network service responsible for data fetching.
@@ -39,20 +41,14 @@ extension StocksListRepository: StocksListRepositoryProtocol {
     ///
     /// - Parameter completion: A closure that is called once the data fetch operation is complete.
     ///                         It provides a result that contains either the fetched `StocksListDomainModel` or a `NetworkError`.
-    func fetchStocksList(
-        completion: @escaping (Result<StocksListDomainModel, NetworkError>) -> Void
-    ) -> URLSessionDataTask? {
+    func fetchStocksList() -> AnyPublisher<StocksListDomainModel, NetworkError> {
         let model = APIRequestModel(api: StocksAPI.getStocksList)
         // Use the network service to fetch data and handle the result.
-        let task = networkClient.request(with: model,
-                                         objectType: StocksListModelDTO.self) { result in
-            switch result {
-            case let .success(response):
-                completion(.success(response.toDomain()))
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
-        return task
+        return networkClient.request(with: model,
+                                     objectType: StocksListModelDTO.self)
+        .map({ result in
+            return result.toDomain()
+        })
+        .eraseToAnyPublisher()
     }
 }

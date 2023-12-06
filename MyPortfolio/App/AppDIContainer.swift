@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkManager
 
 protocol AppDIContainerProtocol {
     /// A property representing the network client service used for making API requests.

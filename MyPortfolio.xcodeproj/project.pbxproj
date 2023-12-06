@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,12 +41,6 @@
 		89AD41FB2AD55A6100848864 /* StocksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD41FA2AD55A6100848864 /* StocksAPI.swift */; };
 		89AD41FD2AD55A7E00848864 /* StocksListRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD41FC2AD55A7E00848864 /* StocksListRepository.swift */; };
 		89AD41FF2AD55AA200848864 /* StocksListModelDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD41FE2AD55AA200848864 /* StocksListModelDTO.swift */; };
-		89AD42042AD55AE000848864 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42032AD55AE000848864 /* NetworkClient.swift */; };
-		89AD42062AD55AF300848864 /* NetworkServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42052AD55AF300848864 /* NetworkServiceManager.swift */; };
-		89AD42082AD55B0800848864 /* APIRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42072AD55B0800848864 /* APIRequestModel.swift */; };
-		89AD420A2AD55B1C00848864 /* NetoworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42092AD55B1C00848864 /* NetoworkHelper.swift */; };
-		89AD420C2AD55B3100848864 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD420B2AD55B3100848864 /* NetworkServiceProtocol.swift */; };
-		89AD420E2AD55B4400848864 /* NetworkJsonDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD420D2AD55B4400848864 /* NetworkJsonDecoder.swift */; };
 		89AD42102AD55B6000848864 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD420F2AD55B6000848864 /* Double.swift */; };
 		89AD42122AD55B7500848864 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42112AD55B7500848864 /* UIViewController+Extension.swift */; };
 		89AD42142AD55B9C00848864 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD42132AD55B9C00848864 /* UIView+Extension.swift */; };
@@ -68,6 +62,7 @@
 		89AD423B2AD5628000848864 /* NetworkClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD423A2AD5628000848864 /* NetworkClientTest.swift */; };
 		89AD423D2AD5629A00848864 /* NetworkServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD423C2AD5629A00848864 /* NetworkServiceTest.swift */; };
 		89AD42402AD5636700848864 /* Stocks.json in Resources */ = {isa = PBXBuildFile; fileRef = 89AD423F2AD5636700848864 /* Stocks.json */; };
+		89EB575A2B1F7A550056445A /* NetworkManager in Frameworks */ = {isa = PBXBuildFile; productRef = 89EB57592B1F7A550056445A /* NetworkManager */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,12 +120,6 @@
 		89AD41FA2AD55A6100848864 /* StocksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksAPI.swift; sourceTree = "<group>"; };
 		89AD41FC2AD55A7E00848864 /* StocksListRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksListRepository.swift; sourceTree = "<group>"; };
 		89AD41FE2AD55AA200848864 /* StocksListModelDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksListModelDTO.swift; sourceTree = "<group>"; };
-		89AD42032AD55AE000848864 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
-		89AD42052AD55AF300848864 /* NetworkServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceManager.swift; sourceTree = "<group>"; };
-		89AD42072AD55B0800848864 /* APIRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestModel.swift; sourceTree = "<group>"; };
-		89AD42092AD55B1C00848864 /* NetoworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetoworkHelper.swift; sourceTree = "<group>"; };
-		89AD420B2AD55B3100848864 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
-		89AD420D2AD55B4400848864 /* NetworkJsonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkJsonDecoder.swift; sourceTree = "<group>"; };
 		89AD420F2AD55B6000848864 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		89AD42112AD55B7500848864 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		89AD42132AD55B9C00848864 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -152,6 +141,7 @@
 		89AD423A2AD5628000848864 /* NetworkClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClientTest.swift; sourceTree = "<group>"; };
 		89AD423C2AD5629A00848864 /* NetworkServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceTest.swift; sourceTree = "<group>"; };
 		89AD423F2AD5636700848864 /* Stocks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Stocks.json; sourceTree = "<group>"; };
+		89EB575B2B1F7AC30056445A /* NetworkManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkManager; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89EB575A2B1F7A550056445A /* NetworkManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +183,7 @@
 		89AD41762AD544D600848864 = {
 			isa = PBXGroup;
 			children = (
+				89EB575B2B1F7AC30056445A /* NetworkManager */,
 				89AD41812AD544D600848864 /* MyPortfolio */,
 				89AD41982AD544D700848864 /* MyPortfolioTests */,
 				89AD41A22AD544D700848864 /* MyPortfolioUITests */,
@@ -492,12 +484,6 @@
 		89AD42022AD55AC900848864 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				89AD42032AD55AE000848864 /* NetworkClient.swift */,
-				89AD42052AD55AF300848864 /* NetworkServiceManager.swift */,
-				89AD42072AD55B0800848864 /* APIRequestModel.swift */,
-				89AD42092AD55B1C00848864 /* NetoworkHelper.swift */,
-				89AD420B2AD55B3100848864 /* NetworkServiceProtocol.swift */,
-				89AD420D2AD55B4400848864 /* NetworkJsonDecoder.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -594,6 +580,9 @@
 			dependencies = (
 			);
 			name = MyPortfolio;
+			packageProductDependencies = (
+				89EB57592B1F7A550056445A /* NetworkManager */,
+			);
 			productName = MyPortfolio;
 			productReference = 89AD417F2AD544D600848864 /* MyPortfolio.app */;
 			productType = "com.apple.product-type.application";
@@ -671,6 +660,7 @@
 			mainGroup = 89AD41762AD544D600848864;
 			packageReferences = (
 				8929BFD72ADEADED0009F80E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+				89EB57582B1F7A550056445A /* XCLocalSwiftPackageReference "NetworkManager" */,
 			);
 			productRefGroup = 89AD41802AD544D600848864 /* Products */;
 			projectDirPath = "";
@@ -720,17 +710,13 @@
 				89AD41DB2AD5587600848864 /* HomeScreenCoordinator.swift in Sources */,
 				89AD41BF2AD5561200848864 /* HomeScreenDIContainer.swift in Sources */,
 				89AD41BD2AD555F700848864 /* AppDIContainer.swift in Sources */,
-				89AD420C2AD55B3100848864 /* NetworkServiceProtocol.swift in Sources */,
 				89AD41DF2AD558BA00848864 /* FooterView.swift in Sources */,
 				89AD41E32AD5591400848864 /* HomeScreenTableViewCell.swift in Sources */,
-				89AD420A2AD55B1C00848864 /* NetoworkHelper.swift in Sources */,
 				89AD41BB2AD555E000848864 /* AppAppearance.swift in Sources */,
 				89AD41CF2AD557C300848864 /* HomeDetailCoordinator.swift in Sources */,
 				89AD41D12AD557EA00848864 /* HomeDetailScreenView.swift in Sources */,
-				89AD420E2AD55B4400848864 /* NetworkJsonDecoder.swift in Sources */,
 				89AD41C52AD5567A00848864 /* TableViewSectionContainer.swift in Sources */,
 				89AD41D92AD5584D00848864 /* HomeScreenProtocol.swift in Sources */,
-				89AD42042AD55AE000848864 /* NetworkClient.swift in Sources */,
 				89AD41D32AD5580B00848864 /* HomeDetailScreenViewModel.swift in Sources */,
 				89AD41F02AD559B800848864 /* StocksListUseCaseProtocol.swift in Sources */,
 				89AD42122AD55B7500848864 /* UIViewController+Extension.swift in Sources */,
@@ -744,12 +730,10 @@
 				89AD41F22AD559CB00848864 /* StocksListRepositoryProtocol.swift in Sources */,
 				89AD41CD2AD5579F00848864 /* HomeDetailScreenProtocol.swift in Sources */,
 				89AD41DD2AD558A600848864 /* HomeScreenViewController.swift in Sources */,
-				89AD42082AD55B0800848864 /* APIRequestModel.swift in Sources */,
 				89AD42142AD55B9C00848864 /* UIView+Extension.swift in Sources */,
 				89AD41FB2AD55A6100848864 /* StocksAPI.swift in Sources */,
 				89AD41EB2AD5597900848864 /* HomeScreenListViewData.swift in Sources */,
 				89AD41E52AD5592600848864 /* HomeScreenCellView.swift in Sources */,
-				89AD42062AD55AF300848864 /* NetworkServiceManager.swift in Sources */,
 				89AD42162AD55BB000848864 /* Constants.swift in Sources */,
 				89AD42182AD55BC700848864 /* BaseProtocol.swift in Sources */,
 				89AD41E92AD5596600848864 /* HomeScreenViewModel.swift in Sources */,
@@ -1102,6 +1086,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		89EB57582B1F7A550056445A /* XCLocalSwiftPackageReference "NetworkManager" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = NetworkManager;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		8929BFD72ADEADED0009F80E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1118,6 +1109,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8929BFD72ADEADED0009F80E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
 			productName = SnapshotTesting;
+		};
+		89EB57592B1F7A550056445A /* NetworkManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkManager;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

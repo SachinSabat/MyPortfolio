@@ -9,14 +9,15 @@ import Foundation
 import Combine
 
 /// A class responsible for handling network-related operations.
-final class NetworkClient {
+@available(iOS 13.0, *)
+public final class NetworkClient {
 
     private let networkService: NetworkServiceProtocol
     /// Initializes a new `NetworkClient` instance.
     ///
     /// - Parameter networkService: The network service to be used for network operations.
     ///
-    init(
+    public init(
         with networkService: NetworkServiceProtocol
     ) {
         self.networkService = networkService
@@ -24,6 +25,7 @@ final class NetworkClient {
 }
 
 /// An extension of `NetworkClient` conforming to `NetworkClientServiceProtocol`.
+@available(iOS 13.0, *)
 extension NetworkClient: NetworkClientServiceProtocol {
 
     /// Sends a network request and handles the response.
@@ -38,15 +40,16 @@ extension NetworkClient: NetworkClientServiceProtocol {
     /// - Important: This method expects the `endpoint` parameter to conform to `APIModelProtocol`.
     ///              The response is expected to be in JSON format and is decoded using `JSONResponseDecoder`.
     ///
-    func request<T, E>(
+    public func request<T, E>(
         with endpoint: E,
         objectType: T.Type
-    ) -> AnyPublisher<T, Error> where T: Decodable, E: APIModelProtocol
+    ) -> AnyPublisher<T, NetworkError> where T: Decodable, E: APIModelProtocol
     {
         return networkService.request(endpoint: endpoint)
     }
 }
 
+@available(iOS 13.0, *)
 extension NetworkClient {
     // MARK: - Private
     /// Decodes network response data into a specified type.

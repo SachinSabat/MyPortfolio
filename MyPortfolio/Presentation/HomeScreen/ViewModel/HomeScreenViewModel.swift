@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import Combine
 /// A view model responsible for managing the Home Screen.
 final class HomeScreenViewModel: HomeScreenViewInputCommonProtocol {
 
@@ -19,6 +19,7 @@ final class HomeScreenViewModel: HomeScreenViewInputCommonProtocol {
     weak var viewDelegate: HomeScreenViewModelOutput?
     /// A home screen use case
     private var homeScreenUsecase: StocksListUseCaseProtocol
+    private var cancellables = Set<AnyCancellable>()
 
     //MARK: Initializer
     init(
@@ -32,22 +33,21 @@ final class HomeScreenViewModel: HomeScreenViewInputCommonProtocol {
     /// Fetches data for the Home Screen from the API.
     func getHomeScreenData() {
         viewDelegate?.changeViewState(.loading)
-        homeScreenUsecase.executeStocksListData { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case let .success(response):
-                DispatchQueue.main.async {
-                    self.updateDataForVM(data: response)
-                    self.viewDelegate?.changeViewState(.content)
+        homeScreenUsecase.executeStocksListData()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.viewDelegate?.changeViewState(.error(error.localizedDescription))
+                case .finished:
+                    self?.viewDelegate?.changeViewState(.content)
                 }
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    self.viewDelegate?.changeViewState(.error(error.localizedDescription))
-                }
-            }
-        }
+            },
+            receiveValue: { [weak self] viewModelData in
+                self?.homeScreenUsecase.executeAllFooterData(stocksListDomainModel: viewModelData)
+                self?.updateDataForVM(data: viewModelData)
+            })
+            .store(in: &cancellables)
     }
 
     private func updateDataForVM(data: StocksListDomainModel) {

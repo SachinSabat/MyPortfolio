@@ -8,13 +8,14 @@
 import Foundation
 import Combine
 
-final class NetworkService {
+@available(iOS 13.0, *)
+public final class NetworkService {
 
     /// The session manager used for network requests.
     private let sessionManager: NetworkSessionManagerProtocol
 
     /// The default `URLSession` for network requests with custom configuration settings.
-    static var currentSession: URLSession = {
+    public static var currentSession: URLSession = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 20
         configuration.timeoutIntervalForResource = 30
@@ -26,7 +27,7 @@ final class NetworkService {
     /// Initializes a new `NetworkService` instance.
     ///
     /// - Parameter sessionManager: The session manager to use for network requests.
-    init(
+    public init(
         sessionManager: NetworkSessionManagerProtocol = NetworkSessionManager(currentSession: NetworkService.currentSession)
     ) {
         self.sessionManager = sessionManager
@@ -42,20 +43,38 @@ final class NetworkService {
     ///
     private func request<T: Decodable>(
         request: URLRequest
-    ) -> AnyPublisher<T, Error> {
+    ) -> AnyPublisher<T, NetworkError> {
+
         return sessionManager.request(request: request)
             .tryMap { result in
-                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
-                    throw URLError(.badServerResponse)
+                guard let httpResponse = result.response as? HTTPURLResponse else {
+                    throw NetworkError.requestFailed
                 }
-                return result.data
+                if (200..<300) ~= httpResponse.statusCode {
+                    return result.data
+                } else if httpResponse.statusCode == 401 {
+                    throw NetworkError.tokenExpired
+                } else {
+                    if let error = try? JSONDecoder().decode(ApiErrorDTO.self, from: result.data) {
+                        throw NetworkError.customApiError(error)
+                    } else {
+                        throw NetworkError.emptyErrorWithStatusCode(httpResponse.statusCode.description)
+                    }
+                }
             }
             .decode(type: T.self, decoder: JSONDecoder())
+            .mapError({ error -> NetworkError in
+                if let error = error as? NetworkError {
+                    return error
+                }
+                return NetworkError.normalError(error)
+            })
             .eraseToAnyPublisher()
     }
 }
 
 /// An extension of `NetworkService` conforming to `NetworkServiceProtocol` and `URLRequestConvertible`.
+@available(iOS 13.0, *)
 extension NetworkService: NetworkServiceProtocol, URLRequestConvertible {
     /// Sends a network request based on an API endPoints.
     ///
@@ -65,22 +84,22 @@ extension NetworkService: NetworkServiceProtocol, URLRequestConvertible {
     ///
     /// - Returns: A URLSessionDataTask representing the ongoing network request.
     ///
-    func request<T: Decodable>(endpoint: APIModelProtocol) -> AnyPublisher<T, Error> {
+    public func request<T: Decodable>(endpoint: APIModelProtocol) -> AnyPublisher<T, NetworkError> {
         let urlRequest = makeURLRequest(apiModel: endpoint)
         return request(request: urlRequest)
     }
 }
 
 /// A class responsible for managing network sessions using the default URLSession.
-final class NetworkSessionManager: NetworkSessionManagerProtocol {
+public final class NetworkSessionManager: NetworkSessionManagerProtocol {
 
     /// The current URLSession used for network requests.
-    let currentSession: URLSession
+    public let currentSession: URLSession
 
     /// Initializes a new `NetworkSessionManager` instance.
     ///
     /// - Parameter currentSession: The URLSession to be used for network requests.
-    init(currentSession: URLSession) {
+    public init(currentSession: URLSession) {
         self.currentSession = currentSession
     }
     /// Initiates a network request using a provided URLRequest.
@@ -91,7 +110,8 @@ final class NetworkSessionManager: NetworkSessionManagerProtocol {
     ///
     /// - Returns: A URLSessionDataTask representing the ongoing network request.
     ///
-    func request(
+    @available(iOS 13.0, *)
+    public func request(
         request: URLRequest) -> URLSession.DataTaskPublisher {
         let task = currentSession.dataTaskPublisher(for: request)
         return task

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import NetworkManager
 
 /// A use case responsible for fetching data for the portfolio stocks list.
 final class StocksListUseCase: StocksListUseCaseProtocol {
@@ -29,21 +31,14 @@ final class StocksListUseCase: StocksListUseCaseProtocol {
     ///
     /// - Parameter completion: A closure that is called once the data retrieval is complete, providing a `Result` type containing either the `StocksListDomainModel` or a `NetworkError`.
     ///
-    func executeStocksListData(
-        completion: @escaping (Result<StocksListDomainModel, NetworkError>) -> Void
-    ) {
-        stocksListRepository.fetchStocksList { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case let .success(response):
-                self.updateDataArray(response)
-                completion(result)
-            default:
-                completion(result)
-            }
-        }
+    func executeStocksListData() -> AnyPublisher<StocksListDomainModel, NetworkError> {
+        stocksListRepository.fetchStocksList()
+            .self
+            .eraseToAnyPublisher()
+    }
+
+    func executeAllFooterData(stocksListDomainModel: StocksListDomainModel) {
+        updateDataArray(stocksListDomainModel)
     }
 
     /// Updates the data array with the fetched data and notifies the view to update.

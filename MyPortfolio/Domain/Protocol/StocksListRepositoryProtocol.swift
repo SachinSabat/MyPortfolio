@@ -5,7 +5,8 @@
 //  Created by Sachin Sabat on 2023-10-10.
 //
 import Foundation.NSURLSession
-
+import Combine
+import NetworkManager
 /**
  A protocol for fetching data related to the user stocks list.
 
@@ -21,7 +22,5 @@ protocol StocksListRepositoryProtocol {
      The closure should be called with a Result type, containing either the fetched data or an error.
      */
     @discardableResult
-    func fetchStocksList(
-        completion: @escaping (Result<StocksListDomainModel, NetworkError>) -> Void
-    ) -> URLSessionDataTask?
+    func fetchStocksList() -> AnyPublisher<StocksListDomainModel, NetworkError>
 }

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import NetworkManager
 
 /// A protocol that defines the dependencies required for the HomeScreenFlowCoordinator.
 protocol HomeScreenFlowCoordinatorDependencies  {

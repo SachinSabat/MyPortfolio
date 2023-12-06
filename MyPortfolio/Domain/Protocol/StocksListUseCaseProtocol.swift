@@ -4,16 +4,16 @@
 //
 //  Created by Sachin Sabat on 2023-10-10.
 //
-
+import Combine
+import NetworkManager
 /// typealias to have Interface segregation in our code for Stocks list use case
 typealias StocksListUseCaseProtocol = GetStocksListUseCaseProtocol & StocksListCommonUseCaseProtocol
 
 /// Types conforming to `GetStocksListUseCaseProtocol` are responsible for executing the use case to retrieve stocks list data.
 protocol GetStocksListUseCaseProtocol {
     /// Fetches data for the stocks list.
-    func executeStocksListData(
-        completion: @escaping (Result<StocksListDomainModel, NetworkError>) -> Void
-    )
+    func executeStocksListData() -> AnyPublisher<StocksListDomainModel, NetworkError>
+    func executeAllFooterData(stocksListDomainModel: StocksListDomainModel)
 }
 
 protocol StocksListCommonUseCaseProtocol {
