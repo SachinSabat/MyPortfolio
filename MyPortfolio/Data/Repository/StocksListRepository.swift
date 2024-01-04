@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import NetworkManager
+import DataManager
 
 /// A repository class responsible for handling data related to the stocks list.
 ///
@@ -21,15 +22,15 @@ import NetworkManager
 final class StocksListRepository {
 
     /// The network service responsible for data fetching.
-    private let networkClient: NetworkClientServiceProtocol
+    private var dataManager: DataManagerProtocol
     var cancellable = Set<AnyCancellable>()
     /// Initializes a new `StocksListRepository` instance.
     ///
     /// - Parameter network: The network service responsible for data fetching.
     init(
-        networkClient: NetworkClientServiceProtocol
+        dataManager: DataManagerProtocol
     ) {
-        self.networkClient = networkClient
+        self.dataManager = dataManager
     }
 }
 
@@ -44,8 +45,9 @@ extension StocksListRepository: StocksListRepositoryProtocol {
     func fetchStocksList() -> AnyPublisher<StocksListDomainModel, NetworkError> {
         let model = APIRequestModel(api: StocksAPI.getStocksList)
         // Use the network service to fetch data and handle the result.
-        return networkClient.request(with: model,
-                                     objectType: StocksListModelDTO.self)
+        return dataManager.executeRequest(with: model,
+                                          objectType: StocksListModelDTO.self,
+                                          requestType: .APIREQUEST(cacheName: cacheName.Portfolio.rawValue))
         .map({ result in
             return result.toDomain()
         })

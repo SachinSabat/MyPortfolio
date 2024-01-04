@@ -10,6 +10,7 @@
 		8929BFD12ADE77460009F80E /* HomeDetailScreenSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8929BFD02ADE77460009F80E /* HomeDetailScreenSnapshotTest.swift */; };
 		8929BFD62ADE789B0009F80E /* HomeScreenViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8929BFD52ADE789B0009F80E /* HomeScreenViewControllerSnapshotTest.swift */; };
 		8929BFDB2ADEADED0009F80E /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 8929BFDA2ADEADED0009F80E /* SnapshotTesting */; };
+		89A4A45D2B459FFB0003CBC8 /* DataManager in Frameworks */ = {isa = PBXBuildFile; productRef = 89A4A45C2B459FFB0003CBC8 /* DataManager */; };
 		89AD41832AD544D600848864 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD41822AD544D600848864 /* AppDelegate.swift */; };
 		89AD418C2AD544D700848864 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89AD418B2AD544D700848864 /* Assets.xcassets */; };
 		89AD418F2AD544D700848864 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89AD418D2AD544D700848864 /* LaunchScreen.storyboard */; };
@@ -83,6 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8914D2262B459AE300060081 /* DataManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataManager; sourceTree = "<group>"; };
 		8929BFD02ADE77460009F80E /* HomeDetailScreenSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDetailScreenSnapshotTest.swift; sourceTree = "<group>"; };
 		8929BFD52ADE789B0009F80E /* HomeScreenViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		89AD417F2AD544D600848864 /* MyPortfolio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPortfolio.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89A4A45D2B459FFB0003CBC8 /* DataManager in Frameworks */,
 				89EB575A2B1F7A550056445A /* NetworkManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,14 +183,23 @@
 			path = SnapshotTestCases;
 			sourceTree = "<group>";
 		};
+		89A4A45B2B459FFB0003CBC8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		89AD41762AD544D600848864 = {
 			isa = PBXGroup;
 			children = (
+				8914D2262B459AE300060081 /* DataManager */,
 				89EB575B2B1F7AC30056445A /* NetworkManager */,
 				89AD41812AD544D600848864 /* MyPortfolio */,
 				89AD41982AD544D700848864 /* MyPortfolioTests */,
 				89AD41A22AD544D700848864 /* MyPortfolioUITests */,
 				89AD41802AD544D600848864 /* Products */,
+				89A4A45B2B459FFB0003CBC8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -582,6 +594,7 @@
 			name = MyPortfolio;
 			packageProductDependencies = (
 				89EB57592B1F7A550056445A /* NetworkManager */,
+				89A4A45C2B459FFB0003CBC8 /* DataManager */,
 			);
 			productName = MyPortfolio;
 			productReference = 89AD417F2AD544D600848864 /* MyPortfolio.app */;
@@ -1109,6 +1122,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8929BFD72ADEADED0009F80E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
 			productName = SnapshotTesting;
+		};
+		89A4A45C2B459FFB0003CBC8 /* DataManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DataManager;
 		};
 		89EB57592B1F7A550056445A /* NetworkManager */ = {
 			isa = XCSwiftPackageProductDependency;

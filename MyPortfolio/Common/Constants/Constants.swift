@@ -114,3 +114,7 @@ internal enum AccessibiltyIdentifier: String {
     case HomeAlertMessage
     case HomeDetailViewController
 }
+
+internal enum cacheName: String {
+    case Portfolio
+}

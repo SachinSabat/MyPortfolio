@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 import NetworkManager
+import DataManager
 
 /// A protocol that defines the dependencies required for the HomeScreenFlowCoordinator.
 protocol HomeScreenFlowCoordinatorDependencies  {
@@ -79,8 +80,11 @@ final class HomeScreenDIContainer: HomeScreenFlowCoordinatorDependencies {
     }
 
     // MARK: - Repositories
+
     func makeHomeScreenRepository() -> StocksListRepositoryProtocol {
         StocksListRepository(
+            dataManager: DataHandler(networkClient: makeDefaultNetorkService(),
+                                    cacheManager: CacheManager(name: "Default")),
             networkClient: makeDefaultNetorkService()
         )
     }
