@@ -5,29 +5,34 @@ import Combine
 import Foundation
 import NetworkManager
 
-public protocol DataManagerProtocol {
-    @available(iOS 13.0, *)
-    func executeRequest<T: Codable, E: APIModelProtocol>(
-        with endpoint: E,
-        objectType: T.Type,
-        requestType: RequestType
-    ) -> AnyPublisher<T, NetworkError> where T: Codable, E: APIModelProtocol
-}
-
 @available(iOS 13.0, *)
-public final class DataHandler: DataManagerProtocol {
+// MARK: - Data Manager
+
+/// Final class responsible for managing data operations.
+public final class DataManager: DataManagerProtocol {
     let networkClient: NetworkClientServiceProtocol?
     let plistManager: PlistManagerProtocol?
-    let cacheManager: CacheManagerProtocol?
+    let cacheHelper: CacheHelperProtocol?
 
+    /// Initializer for Data Manager.
+    /// - Parameters:
+    ///   - networkClient: The network client service for making API requests.
+    ///   - plistManager: The plist manager for handling plist-related operations.
+    ///   - cacheHelper: The cache helper for managing caching of data.
     public init(networkClient: NetworkClientServiceProtocol? = nil,
                 plistManager: PlistManagerProtocol? = nil,
-                cacheManager: CacheManagerProtocol? = nil) {
+                cacheHelper: CacheHelperProtocol? = nil) {
         self.networkClient = networkClient
         self.plistManager = plistManager
-        self.cacheManager = cacheManager
+        self.cacheHelper = cacheHelper
     }
 
+    /// Executes a data request based on the specified request type.
+    /// - Parameters:
+    ///   - endpoint: The API endpoint model.
+    ///   - objectType: The type of Codable object expected in the response.
+    ///   - requestType: The type of data request (API request or persistent storage).
+    /// - Returns: A publisher emitting the result of the data request.
     public func executeRequest<T: Codable, E: APIModelProtocol>(
         with endpoint: E,
         objectType: T.Type,
@@ -38,113 +43,102 @@ public final class DataHandler: DataManagerProtocol {
             return executeAPIRequest(with: endpoint,
                                      objectType: objectType,
                                      cacheName: cacheName)
-                .eraseToAnyPublisher()
+            .eraseToAnyPublisher()
         case .PERSISTENTSTORAGE(let type):
             executePersistentStorageType(type: type)
         }
         return Empty<T, NetworkError>()
-              .eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
+}
 
+@available(iOS 13.0, *)
+// MARK: - Data Manager Extension
+
+/// Extension for executing API requests within the Data Manager.
+extension DataManager {
+
+    /// Executes an API request, either fetching from cache or making a network request.
+    /// - Parameters:
+    ///   - endpoint: The API endpoint model.
+    ///   - objectType: The type of Codable object expected in the response.
+    ///   - cacheName: The name of the cache to check for existing data.
+    /// - Returns: A publisher emitting the result of the API request.
+    public func executeAPIRequest<T: Codable, E: APIModelProtocol>(
+        with endpoint: E,
+        objectType: T.Type,
+        cacheName: String
+    ) -> AnyPublisher<T, NetworkError> where T: Codable, E: APIModelProtocol {
+        if let hasData = cacheHelper?.doesCacheManagerHasData(cacheName: cacheName),
+           hasData == true {
+            guard let result = cacheHelper?.readDataFromCacheManager(objectType: objectType,
+                                                                     cacheName: cacheName) else {
+                return Empty<T, NetworkError>()
+                    .eraseToAnyPublisher()
+            }
+            return result
+        } else {
+            return (networkClient?.request(with: endpoint,
+                                           objectType: objectType)
+                .map({ result in
+                    /// Save data to cache
+                    self.cacheHelper?.saveToCache(result: result, cacheName: cacheName)
+                    return result
+                })
+                    .eraseToAnyPublisher()) ?? Empty<T, NetworkError>().eraseToAnyPublisher()
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+// MARK: - Data Manager Extension
+
+/// Extension for executing persistent storage tasks within the Data Manager.
+extension DataManager {
+
+    /// Executes tasks based on the specified persistent storage type.
+    /// - Parameter type: The type of persistent storage.
     public func executePersistentStorageType(type: PersistentStoreType) {
         switch type {
         case .COREDATA:
+            // Implement Core Data tasks
             break
         case .KEYCHAIN:
+            // Implement Keychain tasks
             break
         case .PLIST(plistData: let data):
             executePlistTasks(plistData: data)
             break
         case .REALM:
+            // Implement Realm tasks
             break
         case .SQLITE:
+            // Implement SQLite tasks
             break
         }
     }
 
+    /// Executes tasks based on the provided PlistData.
+    /// - Parameter plistData: The data required for plist-related tasks.
     public func executePlistTasks(plistData: PlistData) {
         switch plistData.plistAction {
         case .addNewValue:
             plistManager?.addNew(plistData.value,
                                  key: plistData.key,
                                  toPlistWithName: plistData.plistName) { error in
-
+                // Handle completion or errors
             }
         case .saveValue:
             plistManager?.save(plistData.value,
                                forKey: plistData.key,
                                toPlistWithName: plistData.plistName) { error in
-
+                // Handle completion or errors
             }
         default:
             plistManager?.removeAllKeyValuePairs(fromPlistWithName: plistData.plistName) { error in
-
+                // Handle completion or errors
             }
         }
     }
-
-    public func executeAPIRequest<T: Codable, E: APIModelProtocol>(
-        with endpoint: E,
-        objectType: T.Type,
-        cacheName: String
-    ) -> AnyPublisher<T, NetworkError> where T: Codable, E: APIModelProtocol {
-        if cacheManager?.hasData(forKey: cacheName) == true {
-            if let data: Data = (cacheManager?.readData(forKey: cacheName)),
-                let decode = try? JSONDecoder().decode(T.self, from: data) {
-                return Just(decode)
-                    .setFailureType(to: NetworkError.self)
-                    .eraseToAnyPublisher()
-            }
-            return Empty<T, NetworkError>()
-                .eraseToAnyPublisher()
-        } else {
-            return (networkClient?.request(with: endpoint,
-                                           objectType: objectType)
-                .map({ result in
-                    self.saveToCache(result: result, 
-                                     cacheName: cacheName)
-                    return result
-                })
-                    .eraseToAnyPublisher()) ?? Empty<T, NetworkError>().eraseToAnyPublisher()
-        }
-    }
-
-    func saveToCache(result: Codable, cacheName: String) {
-        do {
-            try self.cacheManager?.write(codable: result,
-                                         forKey: cacheName)
-        }
-        catch {
-            print("unable to save cache data")
-        }
-    }
 }
 
-public enum RequestType {
-    case APIREQUEST(cacheName: String)
-    case PERSISTENTSTORAGE(type: PersistentStoreType)
-}
-
-public enum PersistentStoreType {
-    case COREDATA
-    case SQLITE
-    case REALM
-    case PLIST(plistData: PlistData)
-    case KEYCHAIN
-}
-
-public enum PlistAction {
-    case addNewValue
-    case saveValue
-    case fetchValue
-    case getValue
-    case removeKeyValue
-    case removeAllKeyValue
-}
-
-public struct PlistData {
-    var value: Any
-    var key: String
-    var plistName: String
-    var plistAction: PlistAction
-}

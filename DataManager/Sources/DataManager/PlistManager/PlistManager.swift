@@ -7,17 +7,6 @@
 
 import Foundation
 
-public protocol PlistManagerProtocol {
-    func addNew(_ value: Any, key: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ())
-    func removeKeyValuePair(for key: String, fromPlistWithName: String, completion:(_ error :PlistManagerError?) -> ())
-    func removeAllKeyValuePairs(fromPlistWithName: String, completion:(_ error :PlistManagerError?) -> ())
-    func addNewOrSave(_ value: Any, forKey: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ())
-    func save(_ value: Any, forKey: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ())
-    func fetchValue(for key: String, fromPlistWithName: String) -> Any?
-    func getValue(for key: String, fromPlistWithName: String, completion:(_ result : Any?, _ error :PlistManagerError?) -> ())
-    func keyAlreadyExists(key: String, inPlistWithName: String) -> Bool
-}
-
 public struct Plist {
 
     public let name:String
@@ -46,7 +35,6 @@ public struct Plist {
             return nil }
 
         if !fileManager.fileExists(atPath: destination) {
-
             do {
                 try fileManager.copyItem(atPath: source, toPath: destination)
             } catch _ as NSError {
@@ -84,7 +72,9 @@ public class PlistManager: PlistManagerProtocol {
 
     public init() { }
 
-    public func addNew(_ value: Any, key: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ()) {
+    public func addNew(_ value: Any, key: String, 
+                       toPlistWithName: String,
+                       completion:(_ error :PlistManagerError?) -> ()) {
         if !keyAlreadyExists(key: key, inPlistWithName: toPlistWithName) {
             if let plist = Plist(name: toPlistWithName) {
 
@@ -92,9 +82,7 @@ public class PlistManager: PlistManagerProtocol {
                     completion(.fileUnavailable)
                     return
                 }
-
                 dict[key] = value
-
                 do {
                     try plist.addValuesToPlistFile(dictionary: dict)
                     completion(nil)
@@ -108,11 +96,11 @@ public class PlistManager: PlistManagerProtocol {
         } else {
             completion(.keyValuePairAlreadyExists)
         }
-
-
     }
 
-    public func removeKeyValuePair(for key: String, fromPlistWithName: String, completion:(_ error :PlistManagerError?) -> ()) {
+    public func removeKeyValuePair(for key: String, 
+                                   fromPlistWithName: String,
+                                   completion:(_ error :PlistManagerError?) -> ()) {
         if keyAlreadyExists(key: key, inPlistWithName: fromPlistWithName) {
             if let plist = Plist(name: fromPlistWithName) {
 
@@ -121,32 +109,28 @@ public class PlistManager: PlistManagerProtocol {
                     return
                 }
                 dict.removeObject(forKey: key)
-
                 do {
                     try plist.addValuesToPlistFile(dictionary: dict)
                     completion(nil)
                 } catch {
                     completion(error as? PlistManagerError)
                 }
-
             } else {
                 completion(.fileUnavailable)
             }
         } else {
             completion(.keyValuePairDoesNotExist)
         }
-
     }
 
-    public func removeAllKeyValuePairs(fromPlistWithName: String, completion:(_ error :PlistManagerError?) -> ()) {
+    public func removeAllKeyValuePairs(fromPlistWithName: String, 
+                                       completion:(_ error :PlistManagerError?) -> ()) {
 
         if let plist = Plist(name: fromPlistWithName) {
-
             guard let dict = plist.getMutablePlistFile() else {
                 completion(.fileUnavailable)
                 return
             }
-
             let keys = Array(dict.allKeys)
 
             if keys.count != 0 {
@@ -155,20 +139,21 @@ public class PlistManager: PlistManagerProtocol {
                 completion(.fileAlreadyEmpty)
                 return
             }
-
             do {
                 try plist.addValuesToPlistFile(dictionary: dict)
                 completion(nil)
             } catch {
                 completion(error as? PlistManagerError)
             }
-
         } else {
             completion(.fileUnavailable)
         }
     }
 
-    public func addNewOrSave(_ value: Any, forKey: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ()) {
+    public func addNewOrSave(_ value: Any, 
+                             forKey: String,
+                             toPlistWithName: String,
+                             completion:(_ error :PlistManagerError?) -> ()) {
         if keyAlreadyExists(key: forKey, inPlistWithName: toPlistWithName){
             save(value, forKey: forKey, toPlistWithName: toPlistWithName, completion: completion)
         }else{
@@ -176,33 +161,31 @@ public class PlistManager: PlistManagerProtocol {
         }
     }
 
-    public func save(_ value: Any, forKey: String, toPlistWithName: String, completion:(_ error :PlistManagerError?) -> ()) {
+    public func save(_ value: Any, forKey: String,
+                     toPlistWithName: String,
+                     completion:(_ error :PlistManagerError?) -> ()) {
 
         if let plist = Plist(name: toPlistWithName) {
-
             guard let dict = plist.getMutablePlistFile() else {
                 completion(.fileUnavailable)
                 return
             }
-
-            if let dictValue = dict[forKey] {
+            if let _ = dict[forKey] {
                 dict[forKey] = value
             }
-
             do {
                 try plist.addValuesToPlistFile(dictionary: dict)
                 completion(nil)
             } catch {
                 completion(error as? PlistManagerError)
             }
-
-
         } else {
             completion(.fileUnavailable)
         }
     }
 
-    public func fetchValue(for key: String, fromPlistWithName: String) -> Any? {
+    public func fetchValue(for key: String, 
+                           fromPlistWithName: String) -> Any? {
 
         guard let plist = Plist(name: fromPlistWithName),
               let dict = plist.getMutablePlistFile() else {
@@ -215,8 +198,10 @@ public class PlistManager: PlistManagerProtocol {
         return value
     }
 
-    public func getValue(for key: String, fromPlistWithName: String, completion:(_ result : Any?, _ error :PlistManagerError?) -> ()) {
-
+    public func getValue(for key: String, 
+                         fromPlistWithName: String,
+                         completion:(_ result : Any?,
+                                     _ error :PlistManagerError?) -> ()) {
         guard let plist = Plist(name: fromPlistWithName),
               let dict = plist.getMutablePlistFile() else {
             completion(nil, .fileUnavailable)
@@ -229,8 +214,8 @@ public class PlistManager: PlistManagerProtocol {
         completion(value, nil)
     }
 
-    public func keyAlreadyExists(key: String, inPlistWithName: String) -> Bool {
-
+    public func keyAlreadyExists(key: String,
+                                 inPlistWithName: String) -> Bool {
         guard let plist = Plist(name: inPlistWithName),
               let dict = plist.getMutablePlistFile() else { return false }
 
@@ -238,15 +223,4 @@ public class PlistManager: PlistManagerProtocol {
         return keys.contains { $0 as? String == key }
 
     }
-
-}
-
-
-public enum PlistManagerError: Error {
-    case fileNotWritten
-    case fileDoesNotExist
-    case fileUnavailable
-    case fileAlreadyEmpty
-    case keyValuePairAlreadyExists
-    case keyValuePairDoesNotExist
 }

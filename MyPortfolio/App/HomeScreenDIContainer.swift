@@ -83,10 +83,14 @@ final class HomeScreenDIContainer: HomeScreenFlowCoordinatorDependencies {
 
     func makeHomeScreenRepository() -> StocksListRepositoryProtocol {
         StocksListRepository(
-            dataManager: DataHandler(networkClient: makeDefaultNetorkService(),
-                                    cacheManager: CacheManager(name: "Default")),
-            networkClient: makeDefaultNetorkService()
-        )
+            dataManager: DataManager(networkClient: makeDefaultNetorkService(),
+                                     cacheHelper: makeDefaultCacheHelper())
+            )
+    }
+
+    // MARK: - Cache Helper
+    func makeDefaultCacheHelper() -> CacheHelperProtocol {
+        CacheHelper(cacheManager: CacheManager(name: cacheName.Default.rawValue))
     }
 
     // MARK: - Network Service
